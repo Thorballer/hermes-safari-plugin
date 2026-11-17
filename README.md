@@ -29,6 +29,23 @@ hermes plugins list | grep safari     # -> safari  enabled
 hermes safari doctor                  # -> permission gates, with the fix for each
 ```
 
+**No dependencies.** The plugin is pure Python stdlib and drives the `osascript`
+and `defaults` binaries that ship with macOS — nothing to `pip install`, no
+`requirements.txt`, no Homebrew package needed to get working.
+
+The one optional extra is [`cliclick`](https://github.com/BlueM/cliclick), and
+only for one tool:
+
+```bash
+brew install cliclick          # optional — real OS mouse events
+```
+
+Skip it and you still have 7 of 8 tools plus selector-mode `safari_click`. It
+only adds `safari_click` with raw `x`/`y` viewport coordinates, and makes
+selector clicks land as genuine OS events that sites rejecting synthetic JS
+clicks will accept. Everything else — open, state, tabs, JS, page text, find,
+type, screenshot — works without it.
+
 <details>
 <summary>Other install routes</summary>
 
@@ -51,7 +68,8 @@ hermes plugins enable safari
 
 The plugin works in layers. The cheapest gate gets you `safari_open`,
 `safari_state` and `safari_tabs`; each further gate unlocks more tools. Do them
-in this order — every step is a one-time click.
+in this order — every step is a one-time click, and **no step requires a
+package install** except the optional Step 3.
 
 ### Step 0 — confirm what you have
 
@@ -90,7 +108,10 @@ driver instead of a tab opener. Note the setting is per-Safari-install and
 survives restarts, but a Safari update or a prefs reset can clear it; re-check
 with `hermes safari doctor` if JS calls start failing.
 
-### Step 3 — cliclick (real OS mouse events)
+### Step 3 — cliclick (optional: real OS mouse events)
+
+Only needed for coordinate clicks and for sites that reject synthetic JS clicks.
+Skip it entirely if selector-mode clicking is enough.
 
 ```bash
 brew install cliclick
